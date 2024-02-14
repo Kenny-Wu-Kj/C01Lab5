@@ -14,6 +14,13 @@
           name: Backend test
           runs-on: ubuntu-latest
 
+          services:
+            mongodb:
+              image: mongo:latest
+              ports:
+                - 27017:27017
+              options: --health-cmd "mongosh --eval 'db.runCommand({ping: 1})'" --health-interval 10s --health-timeout 5s --health-retries 5
+
           defaults:
               run:
                   working-directory: ./quirknotes/backend
@@ -29,9 +36,9 @@
                 uses: actions/setup-node@v3
                 with:
                   node-version: ${{ matrix.node-version }}
-              - run: npm install
-              - run: mkdir data
-              - run: mkdir data/db
-              - run: mongod --dbpath=./data/db
-              - run: npm run dev &n
+              
+              - run: npm i
+              - run: npm run dev &
               - run: npm test
+                env:
+                  MONGODB_URI: mongodb://localhost:27017/Databases
