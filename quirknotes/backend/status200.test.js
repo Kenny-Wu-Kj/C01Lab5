@@ -46,19 +46,26 @@ test("/postNote - Post a note", async () => {
 
   
   test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
+    //Delete All existing notes
+    const collection = db.collection(COLLECTIONS.notes);
+    const data = await collection.deleteMany({});
+
     // Code here
     const title = "NoteTitleTest1";
     const content = "NoteTitleContent1";
+    const createdAt = new Date();
 
-    const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-        title: title,
-        content: content,
-        }),
+    // Send 2 notes to database
+    const result = await collection.insertOne({
+      title,
+      content,
+      createdAt
+    });
+
+    result = await collection.insertOne({
+        title,
+        content,
+        createdAt
     });
 
     const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`, {
@@ -75,8 +82,34 @@ test("/postNote - Post a note", async () => {
   });
   
   test("/deleteNote - Delete a note", async () => {
+    //Delete All existing notes
+    const collection = db.collection(COLLECTIONS.notes);
+    const data = await collection.deleteMany({});
+
     // Code here
-    expect(false).toBe(true);
+    const title = "NoteTitleTest2";
+    const content = "NoteTitleContent2";
+    const createdAt = new Date();
+
+    // Send a note to database
+    const result = await collection.insertOne({
+      title,
+      content,
+      createdAt
+    });
+
+    // Code here
+    const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${result.insertedId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    
+    const deleteNoteBody = await deleteNoteRes.json();
+
+    expect(deleteNoteRes.status).toBe(200);
+    expect(deleteNoteBody.response).toBe(`Document with ID ${result.insertedId} deleted.`);
   });
   
   test("/patchNote - Patch with content and title", async () => {
