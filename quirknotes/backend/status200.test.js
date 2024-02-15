@@ -44,13 +44,13 @@ test("/postNote - Post a note", async () => {
   expect(postNoteBody.response).toBe("Note added succesfully.");
 });
 
-// Mock the service function to return 2 notes
-jest.mock('./server', () => ({
+/**  Mock the service function to return 2 notes
+jest.mock('./server.js', () => ({
     getAllNotes: jest.fn().mockResolvedValue([
       { id: 1, title: 'Note 1', content: 'Content 1' },
       { id: 2, title: 'Note 2', content: 'Content 2' },
     ]),
-  }));
+  })); */
   
 test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
     
