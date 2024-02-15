@@ -1,42 +1,3 @@
-import express from "express";
-import { MongoClient, ObjectId } from "mongodb";
-import cors from "cors";
-
-const app = express();
-const PORT = 4000;
-const mongoURL = "mongodb://127.0.0.1:27017";
-const dbName = "quirknotes";
-
-// Connect to MongoDB
-let db;
-
-async function connectToMongo() {
-  const client = new MongoClient(mongoURL);
-
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB");
-
-    db = client.db(dbName);
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-  }
-}
-
-connectToMongo();
-
-// Open Port
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-  });
-
-app.use(cors());
-
-// Collections to manage
-const COLLECTIONS = {
-    notes: "notes",
-  };
-
 test("1+2=3, empty array is empty", () => {
     expect(1 + 2).toBe(3);
     expect([].length).toBe(0);
@@ -83,30 +44,16 @@ test("/postNote - Post a note", async () => {
   expect(postNoteBody.response).toBe("Note added succesfully.");
 });
 
+// Mock the service function to return 2 notes
+jest.mock('./notesService', () => ({
+    getAllNotes: jest.fn().mockResolvedValue([
+      { id: 1, title: 'Note 1', content: 'Content 1' },
+      { id: 2, title: 'Note 2', content: 'Content 2' },
+    ]),
+  }));
   
-  test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
-    //Delete All existing notes
-    const collection = db.collection(COLLECTIONS.notes);
-    const data = await collection.deleteMany({});
-
-    // Code here
-    const title = "NoteTitleTest1";
-    const content = "NoteTitleContent1";
-    const createdAt = new Date();
-
-    // Send 2 notes to database
-    const result = await collection.insertOne({
-      title,
-      content,
-      createdAt
-    });
-
-    result = await collection.insertOne({
-        title,
-        content,
-        createdAt
-    });
-
+test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
+    
     const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`, {
         method: "GET",
         headers: {
