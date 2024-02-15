@@ -45,7 +45,7 @@ test("/postNote - Post a note", async () => {
 });
 
 //Mock the service function to return 2 notes
-jest.mock(`${SERVER_URL}/getAllNotes`, () => ({
+jest.mock(`http://localhost:4000/getAllNotes`, () => ({
     getAllNotes: jest.fn().mockResolvedValue([
       { id: 1, title: 'Note 1', content: 'Content 1' },
       { id: 2, title: 'Note 2', content: 'Content 2' },
