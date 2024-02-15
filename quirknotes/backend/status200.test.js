@@ -44,16 +44,22 @@ test("/postNote - Post a note", async () => {
   expect(postNoteBody.response).toBe("Note added succesfully.");
 });
 
-//Mock the service function to return 2 notes
-jest.mock(`http://localhost:4000/getAllNotes`, () => ({
-    getAllNotes: jest.fn().mockResolvedValue([
-      { id: 1, title: 'Note 1', content: 'Content 1' },
-      { id: 2, title: 'Note 2', content: 'Content 2' },
-    ]),
-  }));
-  
 test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
-    
+    // Code here
+    const title = "NoteTitleTest1";
+    const content = "NoteTitleContent1";
+
+    const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        title: title,
+        content: content,
+        }),
+    });
+
     const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`, {
         method: "GET",
         headers: {
@@ -68,34 +74,34 @@ test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
   });
   
   test("/deleteNote - Delete a note", async () => {
-    //Delete All existing notes
-    const collection = db.collection(COLLECTIONS.notes);
-    const data = await collection.deleteMany({});
-
     // Code here
     const title = "NoteTitleTest2";
     const content = "NoteTitleContent2";
-    const createdAt = new Date();
 
-    // Send a note to database
-    const result = await collection.insertOne({
-      title,
-      content,
-      createdAt
+    const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        title: title,
+        content: content,
+        }),
     });
 
-    // Code here
-    const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${result.insertedId}`, {
+    const postNoteBody = await postNoteRes.json();
+    expect(postNoteBody.insertedId).toBe(!null);
+
+    const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${postNoteBody.insertedId}`, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
+        "Content-Type": "application/json",
         },
-      });
-    
-    const deleteNoteBody = await deleteNoteRes.json();
+    });
 
+    const deleteNoteBody = await deleteNoteRes.json();
     expect(deleteNoteRes.status).toBe(200);
-    expect(deleteNoteBody.response).toBe(`Document with ID ${result.insertedId} deleted.`);
+    expect(deleteNoteBody.response).toBe(`Document with ID ${postNoteBody.insertedId} deleted.`);
   });
   
   test("/patchNote - Patch with content and title", async () => {
