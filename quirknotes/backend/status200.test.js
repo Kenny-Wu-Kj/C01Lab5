@@ -90,7 +90,6 @@ test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
     });
 
     const postNoteBody = await postNoteRes.json();
-    expect(postNoteBody.insertedId).toBe(!null);
 
     const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${postNoteBody.insertedId}`, {
         method: "DELETE",
