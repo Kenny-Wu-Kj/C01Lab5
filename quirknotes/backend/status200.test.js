@@ -5,6 +5,24 @@ test("1+2=3, empty array is empty", () => {
 
   const SERVER_URL = "http://localhost:4000";
 
+  
+// Should be tested before postNote
+test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
+    // Code here
+    const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    
+    const getAllNotesBody = await postNoteRes.json();
+    
+    expect(getAllNotesRes.status).toBe(200);
+    expect(getAllNotesBody.response).toBe([]);
+  });
+
+
 test("/postNote - Post a note", async () => {
   const title = "NoteTitleTest";
   const content = "NoteTitleContent";
@@ -26,10 +44,6 @@ test("/postNote - Post a note", async () => {
   expect(postNoteBody.response).toBe("Note added succesfully.");
 });
 
-test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
-    // Code here
-    expect(false).toBe(true);
-  });
   
   test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
     // Code here
