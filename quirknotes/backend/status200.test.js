@@ -5,7 +5,7 @@ test("1+2=3, empty array is empty", () => {
 
   const SERVER_URL = "http://localhost:4000";
 
-  
+
 // Should be tested before postNote
 test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
     // Code here
@@ -16,7 +16,7 @@ test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
         },
       });
     
-    const getAllNotesBody = await postNoteRes.json();
+    const getAllNotesBody = await getAllNotesRes.json();
     
     expect(getAllNotesRes.status).toBe(200);
     expect(getAllNotesBody.response).toBe([]);
