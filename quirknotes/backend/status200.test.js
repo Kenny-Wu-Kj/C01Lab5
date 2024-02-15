@@ -47,7 +47,31 @@ test("/postNote - Post a note", async () => {
   
   test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
     // Code here
-    expect(false).toBe(true);
+    const title = "NoteTitleTest1";
+    const content = "NoteTitleContent1";
+
+    const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        title: title,
+        content: content,
+        }),
+    });
+
+    const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    
+    const getAllNotesBody = await getAllNotesRes.json();
+
+    expect(getAllNotesRes.status).toBe(200);
+    expect(getAllNotesBody.response.length).toBe(2);
   });
   
   test("/deleteNote - Delete a note", async () => {
