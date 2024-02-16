@@ -278,7 +278,7 @@ test("/deleteAllNotes - Delete one note", async () => {
         content: content,
         }),
     });
-    
+
     const postNoteBody = await postNoteRes.json();
 
     const deleteAllNotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
@@ -295,5 +295,33 @@ test("/deleteAllNotes - Delete one note", async () => {
   
   test("/updateNoteColor - Update color of a note to red (#FF0000)", async () => {
     // Code here
-    expect(false).toBe(true);
+    const title = "NoteTitleTest7";
+    const content = "NoteTitleContent7";
+
+    const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        title: title,
+        content: content,
+        }),
+    });
+
+    const postNoteBody = await postNoteRes.json();
+
+    const updateNoteColorRes = await fetch(`${SERVER_URL}/updateNoteColor/${postNoteBody.insertedId}`, {
+        method: "PATCH",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            color: FF0000,
+            }),
+    });
+
+    const updateNoteColorBody = await updateNoteColorRes.json();
+    expect(updateNoteColorRes.status).toBe(200);
+    expect(updateNoteColorBody.response).toBe(`Note color updated successfully.`);
   });
