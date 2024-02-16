@@ -213,6 +213,13 @@ test("/patchNote - Patch with just content", async () => {
   
 test("/deleteAllNotes - Delete one note", async () => {
     // Code here
+    await fetch(`${SERVER_URL}/deleteAllNotes`, {
+        method: "DELETE",
+        headers: {
+        "Content-Type": "application/json",
+        },
+    });
+
     const title = "NoteTitleTest6";
     const content = "NoteTitleContent6";
 
@@ -243,10 +250,28 @@ test("/deleteAllNotes - Delete one note", async () => {
   
   test("/deleteAllNotes - Delete three notes", async () => {
     // Code here
+    await fetch(`${SERVER_URL}/deleteAllNotes`, {
+        method: "DELETE",
+        headers: {
+        "Content-Type": "application/json",
+        },
+    });
+
     const title = "NoteTitleTest7";
     const content = "NoteTitleContent7";
 
-    const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+    await fetch(`${SERVER_URL}/postNote`, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        title: title,
+        content: content,
+        }),
+    });
+
+   await fetch(`${SERVER_URL}/postNote`, {
         method: "POST",
         headers: {
         "Content-Type": "application/json",
@@ -267,19 +292,6 @@ test("/deleteAllNotes - Delete one note", async () => {
         content: content,
         }),
     });
-
-    postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-        title: title,
-        content: content,
-        }),
-    });
-
-    const postNoteBody = await postNoteRes.json();
 
     const deleteAllNotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
         method: "DELETE",
@@ -317,7 +329,7 @@ test("/deleteAllNotes - Delete one note", async () => {
         "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            color: FF0000,
+            color: `#FF0000`,
             }),
     });
 
